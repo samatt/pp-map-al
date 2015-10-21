@@ -23,14 +23,15 @@
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 12,
-    center: {lng: -73.9401 ,lat: 40.7279}
+    zoom: 13,
+    minZoom : 11,
+    maxZoom : 16,
+    center: {lng: -73.9401 ,lat: 40.7279},
   });
 
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
   map.data.loadGeoJson('https://dl.dropboxusercontent.com/u/1108171/pp-algorithms-uber/test.json');
   map.data.setStyle(function(feature) {
-  	console.log(feature.I.stroke);
     var ascii = feature.getProperty('ascii');
     var color = feature.I.fill;
     return {
@@ -39,32 +40,44 @@ function initMap() {
       strokeWeight: 0
     };
 });
-
-  var infoWindow = new google.maps.InfoWindow({map: map});
+  
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-        var pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        };
+        var infoWindow = new google.maps.InfoWindow({map: map});
+        console.log(position);
+        var bounds = map.getBounds();
+        
+        if (bounds.contains(new google.maps.LatLng(position.coords.latitude, position.coords.longitude))){
+          console.log("Position within bounds");
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
 
-        infoWindow.setPosition(pos);
-        infoWindow.setContent('This is your current location.');
-        map.setCenter(pos);
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('This is your current location.');
+          map.setCenter(pos);
+        }
+        else{
+          infoWindow.setPosition(map.getCenter());
+          infoWindow.setContent('We currently only have data for the NYC area.');
+
+        }
       }, function() {
         handleLocationError(true, infoWindow, map.getCenter());
       });
     } else {
-      // Browser doesn't support Geolocation
-      handleLocationError(false, infoWindow, map.getCenter());
+      var infoWindow = new google.maps.InfoWindow({map: map});
+      infoWindow.setPosition(map.getCenter());
+      infoWindow.setContent('Your browser doesnt support Geolocation');
     }
 }
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-    infoWindow.setPosition(pos);
-    infoWindow.setContent(browserHasGeolocation ?
-                          'Error: The Geolocation service failed.' :
-                          'Error: Your browser doesn\'t support geolocation.');
-  }
+  
+  var infoWindow = new google.maps.InfoWindow({map: map});
+  infoWindow.setPosition(map.getCenter());
+  infoWindow.setContent('Couldnt get your location');
+}
 
     </script>
     <script async defer
