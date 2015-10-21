@@ -74,9 +74,10 @@ function initMap() {
 }
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
   
-  var infoWindow = new google.maps.InfoWindow({map: map});
-  infoWindow.setPosition(map.getCenter());
-  infoWindow.setContent('Couldnt get your location');
+  // var infoWindow = new google.maps.InfoWindow({map: map});
+  // infoWindow.setPosition(map.getCenter());
+  // infoWindow.setContent('Couldnt get your location');
+  console.log('Couldnt get your location');
 }
 
     </script>
