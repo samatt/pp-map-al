@@ -33,8 +33,7 @@ function initMap() {
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
   map.data.loadGeoJson('https://dl.dropboxusercontent.com/u/1108171/pp-algorithms-uber/test.json');
   map.data.setStyle(function(feature) {
-    var ascii = feature.getProperty('ascii');
-    var color = feature.I.fill;
+    var color = feature.getProperty('fill');
     return {
       fillColor: color,
       alpha:1.0,
